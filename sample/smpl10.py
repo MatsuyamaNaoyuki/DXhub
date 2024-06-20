@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+
 
 # dx2libの追加APIを使用
 # 複数軸から現在角度取得
