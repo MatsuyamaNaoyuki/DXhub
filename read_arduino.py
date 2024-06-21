@@ -1,12 +1,14 @@
 import serial
 import csv
 import time
+import numpy as np
 from datetime import datetime
 
 
 class bending_sensor:
     def __init__(self):
-        self.value = ''
+        self.rowvalue = ''
+        self.resistance_value = np.empty(4)
 
     def get_value(self):
         arduino = serial.Serial('COM3', 115200, timeout=1)
@@ -15,18 +17,22 @@ class bending_sensor:
         #くるまで待つを実装する必要がある
         while arduino.in_waiting < 0:
            pass 
-        self.value = arduino.readline().decode('utf-8', errors='ignore').rstrip()
-        print(self.value)
+        self.rowvalue = arduino.readline().decode('utf-8', errors='ignore').rstrip()
+    
+    def change_data(self):
+        split_value = np.array(self.rowvalue.split('/'))
+        float_value = np.asarray(split_value, dtype=float)
+        Vcc = 5.0
+        Rt = 1000
+        for i in range(len(float_value)):
+            Vx = float_value[i] * Vcc / 1024
+            self.resistance_value[i] = Rt / (Vcc - Vx) * Vx
+
+
 
 
 
 bending1 = bending_sensor()
 bending1.get_value()
-print(bending1.value)
-# while True:
-#     if arduino.in_waiting > 0:
-#         val_arduino = arduino.readline().decode('utf-8', errors='ignore').rstrip()
-# 	    #val_decoded = float(repr(val_arduino.decode())[1:-5])
-#         data = val_arduino.split('/')
-#         print(data)
-# ser.close()
+bending1.change_data()
+print(bending1.resistance_value)
