@@ -4,20 +4,29 @@ import time
 from datetime import datetime
 
 
+class bending_sensor:
+    def __init__(self):
+        self.value = ''
+
+    def get_value(self):
+        arduino = serial.Serial('COM3', 115200, timeout=1)
+        arduino.reset_input_buffer()  # 入力バッファをクリア
+        arduino.reset_output_buffer()  # 出力バッファをクリア
+        #くるまで待つを実装する必要がある
+        while arduino.in_waiting < 0:
+           pass 
+        self.value = arduino.readline().decode('utf-8', errors='ignore').rstrip()
+        print(self.value)
 
 
-arduino = serial.Serial('COM3', 115200, timeout=1)
-arduino.reset_input_buffer()  # 入力バッファをクリア
-arduino.reset_output_buffer()  # 出力バッファをクリア
-# 現在の日時を取得してファイル名に埋め込む
-# current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-# csv_file = f'sensor_data_{current_time}.csv'            #fstringを用いて文字列に変数を埋め込む
 
-
-
-while True:
-	val_arduino = arduino.readline()
-	
-	#val_decoded = float(repr(val_arduino.decode())[1:-5])
-	print(val_arduino)
-ser.close()
+bending1 = bending_sensor()
+bending1.get_value()
+print(bending1.value)
+# while True:
+#     if arduino.in_waiting > 0:
+#         val_arduino = arduino.readline().decode('utf-8', errors='ignore').rstrip()
+# 	    #val_decoded = float(repr(val_arduino.decode())[1:-5])
+#         data = val_arduino.split('/')
+#         print(data)
+# ser.close()
