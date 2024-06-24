@@ -19,22 +19,34 @@ class MyDynamixel():
         # ID一覧分のDynamixelをトルクディスエーブル
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
         self.rotation_angles = (ctypes.c_double * len(self.IDs))()
+        self.force = (ctypes.c_double * len(self.IDs))()
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
 
 
     def back_to_initial_position(self):
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), False)
-        time.sleep(3)
+        time.sleep(1)
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
-        for id in range(self.IDs):
-            nowPWM = (ctypes.c_double)()
-            dx2.DXL_GetPresentPWM(self.dev, id, nowPWM)
-            while nowPWM > 1:
-                self.move(id, 5)
+        for i in self.IDs:
+            nowforce = self.get_present_PWM(i)
+            while nowforce.value < 1:
+                self.move(i, 1)
+                time.sleep(1)
+                nowforce = self.get_present_PWM(i)
+                print(nowforce.value)
+
             
-        #力がかかるまでmove
+        #力がかかるまでmovep
         #少し緩める
+
+    def get_present_PWM(self, id):
+        nowforce = (ctypes.c_double)()
+        dx2.DXL_GetPresentPWM(self.dev, id,  nowforce)
+        if id == 1 or id == 4:
+            nowforce.value = nowforce.value * -1
+        return nowforce
+
 
 
     def move(self, id, angle_displacement):
@@ -93,6 +105,6 @@ class MyDynamixel():
     # def measurement_force():
 
 Motors = MyDynamixel()
-# Motors.printAngle()
 Motors.manual_move()
+Motors.back_to_initial_position()
 
