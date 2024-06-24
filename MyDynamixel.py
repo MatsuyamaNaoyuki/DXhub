@@ -39,11 +39,11 @@ class MyDynamixel():
 
     def move(self, id, angle_displacement):
         idi = id - 1
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
         gole_angles = self.rotation_angles
 
         #方向の調整
         if id ==  1 or id == 4:
-            print("A")
             setangle = angle_displacement * -1
         else:
             setangle = angle_displacement
@@ -52,6 +52,34 @@ class MyDynamixel():
         dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
+
+
+
+    def manual_move(self):
+        key = ''
+        kb = kbhit.KBHit()
+        while key != 'p':   # 'p'が押されると終了  
+            if kb.kbhit():
+                key = kb.getch()
+        # ' '(スペース)を押す度にトルクイネーブルをトグル
+                if key =='q':  
+                    self.move(1, 10)
+                if key =='w':  
+                    self.move(2, 10)
+                if key =='e':  
+                    self.move(3, 10)
+                if key =='r':  
+                    self.move(4, 10)
+                if key =='a':  
+                    self.move(1, -10)
+                if key =='s':  
+                    self.move(2, -10)
+                if key =='d':  
+                    self.move(3, -10)
+                if key =='f':  
+                    self.move(4, -10)
+
+                       
 
     def printAngle(self):
 
@@ -66,5 +94,5 @@ class MyDynamixel():
 
 Motors = MyDynamixel()
 # Motors.printAngle()
-Motors.move(1, 100)
+Motors.manual_move()
 
