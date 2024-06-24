@@ -28,12 +28,12 @@ class MyDynamixel():
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), False)
         time.sleep(1)
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
-        for i in self.IDs:
-            nowforce = self.get_present_PWM(i)
+        for id in self.IDs:
+            nowforce = self.get_present_PWM(id)
             while nowforce.value < 1:
-                self.move(i, 1)
+                self.move(id, 1)
                 time.sleep(1)
-                nowforce = self.get_present_PWM(i)
+                nowforce = self.get_present_PWM(id)
                 print(nowforce.value)
 
             
@@ -47,6 +47,15 @@ class MyDynamixel():
             nowforce.value = nowforce.value * -1
         return nowforce
 
+    def get_present_PWMs(self):
+        nowforce = (ctypes.c_double)()
+        nowforces = []
+        for id in self.IDs:
+            dx2.DXL_GetPresentPWM(self.dev, id,  nowforce)
+            if id == 1 or id == 4:
+                nowforce.value = nowforce.value * -1
+            nowforces.append(nowforce.value)
+        return nowforces
 
 
     def move(self, id, angle_displacement):
@@ -105,6 +114,8 @@ class MyDynamixel():
     # def measurement_force():
 
 Motors = MyDynamixel()
-Motors.manual_move()
-Motors.back_to_initial_position()
+# Motors.manual_move()
+forces = Motors.get_present_PWMs()
+print(forces)
+# Motors.back_to_initial_position()
 
