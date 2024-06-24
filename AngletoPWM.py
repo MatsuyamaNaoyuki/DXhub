@@ -46,6 +46,7 @@ if dev != None:
         changeAngle[0] = changeAngle[0] + changeRange
         print(changeAngle)
         dx2.DXL_SetGoalAngles (dev, IDs,  gAngles, len(IDs))
+        print(dev)
 
       elif key == 'a':
         gAngles[0] = gAngles[0]  - changeRange
