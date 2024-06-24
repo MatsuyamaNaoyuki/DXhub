@@ -24,6 +24,7 @@ class MyDynamixel():
 
 
 
+
     def back_to_initial_position(self):
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), False)
         time.sleep(1)
@@ -35,6 +36,9 @@ class MyDynamixel():
                 time.sleep(1)
                 nowforce = self.get_present_PWM(id)
                 print(nowforce.value)
+        self.start_angles = (ctypes.c_double * len(self.IDs))()
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))
+
 
             
         #力がかかるまでmovep
@@ -56,6 +60,31 @@ class MyDynamixel():
                 nowforce.value = nowforce.value * -1
             nowforces.append(nowforce.value)
         return nowforces
+    
+    def get_present_angles(self): #スタートとの角度の差を計算
+        # self.start_angles = (ctypes.c_double * len(self.IDs))()
+        # dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs)) 
+        # print('(', end='')
+        # print(('{:7.1f},'*len(self.start_angles)).format(*self.start_angles), end=')\n')  
+        # self.move(1, -10)
+        # self.move(2, -10)
+        # self.move(3, -10)
+        # self.move(4, -10)    
+        # dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs)) 
+        # print('(', end='')
+        # print(('{:7.1f},'*len(self.start_angles)).format(*self.start_angles), end=')\n')  
+        now_angles = (ctypes.c_double * len(self.IDs))()
+        now_angles_list = []
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, now_angles, len(self.IDs))
+        if self.start_angles == None:
+            raise SyntaxError("Do back to initial potiosn")
+        for id in self.IDs:
+            angle = now_angles[id-1] - self.start_angles[id-1]
+            if id == 1 or id == 4:
+                angle = angle * -1
+            now_angles_list.append(angle)
+        return now_angles_list
+        
 
 
     def move(self, id, angle_displacement):
@@ -116,6 +145,7 @@ class MyDynamixel():
 Motors = MyDynamixel()
 # Motors.manual_move()
 forces = Motors.get_present_PWMs()
-print(forces)
+# print(forces)
 # Motors.back_to_initial_position()
-
+angles = Motors.get_present_angles()
+print(angles)
