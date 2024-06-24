@@ -42,7 +42,8 @@ class MyDynamixel():
         gole_angles = self.rotation_angles
 
         #方向の調整
-        if id == 1 or 4:
+        if id ==  1 or id == 4:
+            print("A")
             setangle = angle_displacement * -1
         else:
             setangle = angle_displacement
@@ -65,5 +66,5 @@ class MyDynamixel():
 
 Motors = MyDynamixel()
 # Motors.printAngle()
-Motors.move(4, 100)
+Motors.move(1, 100)
 
