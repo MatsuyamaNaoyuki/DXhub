@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 
-class bending_sensor:
+class BendingSensor:
     def __init__(self):
         self.rowvalue = ''
         self.resistance_value = np.empty(4)
@@ -14,7 +14,6 @@ class bending_sensor:
         arduino = serial.Serial('COM3', 115200, timeout=1)
         arduino.reset_input_buffer()  # 入力バッファをクリア
         arduino.reset_output_buffer()  # 出力バッファをクリア
-        #くるまで待つを実装する必要がある
         while arduino.in_waiting < 0:
            pass 
         self.rowvalue = arduino.readline().decode('utf-8', errors='ignore').rstrip()
@@ -32,7 +31,7 @@ class bending_sensor:
 
 
 
-bending1 = bending_sensor()
+bending1 = BendingSensor()
 bending1.get_value()
 bending1.change_data()
 print(bending1.resistance_value)
