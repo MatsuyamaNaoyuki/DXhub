@@ -24,7 +24,7 @@ class MyDynamixel():
 
 
 
-
+    #初期姿勢に戻る
     def back_to_initial_position(self):
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), False)
         time.sleep(1)
