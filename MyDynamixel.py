@@ -1,8 +1,10 @@
-import sys, time
+import sys, time, datetime
 import ctypes
 from package import kbhit
 from package import dx2lib as dx2
 from package import setting
+import csv
+import pprint
 
 class MyDynamixel():
     def __init__(self):
@@ -19,9 +21,10 @@ class MyDynamixel():
         # ID一覧分のDynamixelをトルクディスエーブル
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
         self.rotation_angles = (ctypes.c_double * len(self.IDs))()
+        self.start_angles = (ctypes.c_double * len(self.IDs))()
         self.force = (ctypes.c_double * len(self.IDs))()
-        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
-
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))
+        self.anglerecord = []
 
 
     #初期姿勢に戻る
@@ -36,6 +39,7 @@ class MyDynamixel():
                 time.sleep(1)
                 nowforce = self.get_present_PWM(id)
                 print(nowforce.value)
+            self.move(id, -1)
         self.start_angles = (ctypes.c_double * len(self.IDs))()
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))
 
@@ -105,7 +109,7 @@ class MyDynamixel():
 
 
 
-    def manual_move(self):
+    def manual_move(self, record = False):
         key = ''
         kb = kbhit.KBHit()
         while key != 'p':   # 'p'が押されると終了  
@@ -128,6 +132,10 @@ class MyDynamixel():
                     self.move(3, -10)
                 if key =='f':  
                     self.move(4, -10)
+                if record == True:
+                    self.record_angle()
+                print(self.get_present_angles())
+                
 
                        
 
@@ -135,17 +143,33 @@ class MyDynamixel():
 
         print('(', end='')
         print(('{:7.1f},'*len(self.rotation_angles)).format(*self.rotation_angles), end=')\n')
+    
+    def record_angle(self, angles = []):
+        now_angle = self.get_present_angles()
+        now_time  = datetime.datetime.now()
+        now_angle.insert(0, now_time)
+        self.anglerecord.append(now_angle)
 
-        
+
 
     # def measurement_rotation_angle():
 
     # def measurement_force():
 
 Motors = MyDynamixel()
+Motors.manual_move()
+Motors.back_to_initial_position()
+Motors.manual_move(record=True)
+
+
+print(Motors.anglerecord)
+with open('C:\\Users\\shigf\\Program\\DXhub\\data\\nosensor.csv', 'w',newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(Motors.anglerecord)
+
 # Motors.manual_move()
-forces = Motors.get_present_PWMs()
+# forces = Motors.get_present_PWMs()
 # print(forces)
 # Motors.back_to_initial_position()
-angles = Motors.get_present_angles()
-print(angles)
+# angles = Motors.get_present_angles()
+# print(angles)

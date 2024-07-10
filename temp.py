@@ -1,45 +1,24 @@
-#位置制御を行うが，トルクを測定し，そこまでみたいなのを試す
 
-import sys, time
+import sys, time, datetime
 import ctypes
 from package import kbhit
 from package import dx2lib as dx2
 from package import setting
-def change_torque(dev, IDs, id, new_torque):
-    for i in range(len(IDs)):
-        if IDs[i] == id:
-            id_subscript = i
-    print(id_subscript)
-    now_torque = (ctypes.c_double)()
-    now_angle = (ctypes.c_double)()
-    dx2.DXL_GetPresentPWM(dev, id, now_torque)
-    while(abs(new_torque - abs(now_torque.value)) > 1):
-        dx2.DXL_GetPresentAngle(dev, id, now_angle)
-        if new_torque - abs(now_torque.value) > 0:
-            if id == 1 or 4:
-                new_angle = now_angle.value - 1 
-            else:
-                new_angle = now_angle.value + 1
-        else:
-            if id == 1 or 4:
-                new_angle = now_angle.value + 1 
-            else:
-                new_angle = now_angle.value - 1
-        dx2.DXL_GetPresentPWM(dev, id, now_torque)
-        
+import csv
+import pprint
 
 
-          
-    
+i = [0,0,0,0]
+now_time  = datetime.datetime.now()
+
+a = []
+i.insert(0, now_time)
+a.append(i)
+a.append(i)
+
+with open('C:\\Users\\shigf\\Program\\DXhub\\data\\sample_writer.csv', 'w') as f:
+    writer = csv.writer(f)
+    writer.writerows(a)
 
 
-
-  
-
-# ID一覧
-IDs = (ctypes.c_uint8 * 4)(1,2,3,4)
-
-change_torque(IDs, 4, 1)
-
-
-
+print(a)
