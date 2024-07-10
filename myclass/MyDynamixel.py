@@ -28,6 +28,7 @@ class MyDynamixel():
         self.anglerecord = []
 
 
+
     #初期姿勢に戻る
     def back_to_initial_position(self):
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), False)
@@ -157,16 +158,16 @@ class MyDynamixel():
 
     # def measurement_force():
 
-Motors = MyDynamixel()
-Motors.manual_move()
-Motors.back_to_initial_position()
-Motors.manual_move(record=True)
+# Motors = MyDynamixel()
+# Motors.manual_move()
+# Motors.back_to_initial_position()
+# Motors.manual_move(record=True)
 
 
-print(Motors.anglerecord)
-with open('C:\\Users\\shigf\\Program\\DXhub\\data\\nosensor.csv', 'w',newline="") as f:
-    writer = csv.writer(f)
-    writer.writerows(Motors.anglerecord)
+# print(Motors.anglerecord)
+# with open('C:\\Users\\shigf\\Program\\DXhub\\data\\nosensor.csv', 'w',newline="") as f:
+#     writer = csv.writer(f)
+#     writer.writerows(Motors.anglerecord)
 
 # Motors.manual_move()
 # forces = Motors.get_present_PWMs()

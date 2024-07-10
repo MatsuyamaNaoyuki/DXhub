@@ -1,1 +1,1 @@
-print(angles)
+                    data = line.split(',')
