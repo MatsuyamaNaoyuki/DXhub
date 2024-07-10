@@ -1,4 +1,5 @@
-import sys, time, datetime
+import sys,os, time, datetime
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import ctypes
 from package import kbhit
 from package import dx2lib as dx2
