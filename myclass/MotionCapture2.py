@@ -17,15 +17,24 @@ class MotionCapture():
         # マルチキャストグループに参加
         self.mreq = struct.pack("4sl", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, self.mreq)
-
         self.datas = []
 
 
 
     def get_data(self):
+        # ノンブロッキングモードに設定
+        self.sock.setblocking(False)
+        # 受信バッファサイズを拡大
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024 * 1024)
+        print("A")
+        clear_udp_buffer(self.sock)
+        print("B")
+        self.sock.setblocking(True)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         now_time  = datetime.datetime.now()
         data, addr = self.sock.recvfrom(1024)
         formatted_now = now_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+        print(data)
         return data, formatted_now
     
     def store_data(self, data, now_time):
@@ -41,12 +50,21 @@ class MotionCapture():
         self.datas.append(floatdatas)
 
         
-
-# mc = Motioncapture()
+# バッファをクリアする関数
+def clear_udp_buffer(sock, timeout=1):
+    end_time = time.time() + timeout
+    while time.time() < end_time:
+        try:
+            data, addr = sock.recvfrom(65535)
+            print("delete__")  # デバッグのために表示（実際には不要）
+        except BlockingIOError:
+            # バッファが空になったら抜ける
+            break
+# mc = MotionCapture()
 # data,nowtime = mc.get_data()
-# mc.change_data(data, nowtime)
+# mc.store_data(data, nowtime)
 # data,nowtime = mc.get_data()
-# mc.change_data(data, nowtime)
+# mc.store_data(data, nowtime)
 # print(mc.datas)
 # filename = 'test'
 # now = datetime.datetime.now()

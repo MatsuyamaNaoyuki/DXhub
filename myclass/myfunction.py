@@ -12,8 +12,8 @@ import numpy as np
 def make_3D_graph(path):
     df = pd.read_csv(path)
     df = df.drop(df.columns[0], axis=1)     #時間を削除
-    rows = df.iloc[0:5]
-
+    rows = df.iloc[12:18]
+    print(rows)
     # 3次元の散布図を作成
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -29,9 +29,16 @@ def make_3D_graph(path):
         z = first_row[2::3]
         ax.scatter(x, y, z, c=colors[i], marker='o', label=f'Row {i+1}')
 
+    ax.set_xlim(0,250)
+    ax.set_ylim(0,250)
+    ax.set_zlim(0,250)
+
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
     ax.legend()
 
     plt.show()
+
+# path = r'C:\Users\shigf\Program\DXhub\myclass\test20240719_092125.csv'
+# make_3D_graph(path)

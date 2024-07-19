@@ -15,7 +15,7 @@ def check_bend(Motors, Mc):
         kijun = [0, 50, 100, 150, 200, 250]
         i = 0
         p = Motors.get_present_angles()
-        while p[j - 1] < 250:
+        while i < 6:
             Motors.move(j,5)
             time.sleep(0.1)
             p = Motors.get_present_angles()
@@ -25,6 +25,7 @@ def check_bend(Motors, Mc):
                 data , now = Mc.get_data()
                 Mc.store_data(data, now)
                 i = i+1
+                Motors.record_angle()
 
 
         p = Motors.get_present_angles()
@@ -38,8 +39,8 @@ def check_bend(Motors, Mc):
 
 Mc = MotionCapture()
 Motors = MyDynamixel()
-Motors.manual_move()
-Motors.back_to_initial_position()
+# Motors.manual_move()
+# Motors.back_to_initial_position()
 
 check_bend(Motors, Mc)
 filename = 'nosensor_motor'
