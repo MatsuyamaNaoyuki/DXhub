@@ -56,7 +56,7 @@ def clear_udp_buffer(sock, timeout=1):
     while time.time() < end_time:
         try:
             data, addr = sock.recvfrom(65535)
-            print("delete__")  # デバッグのために表示（実際には不要）
+            # print("delete__")  # デバッグのために表示（実際には不要）
         except BlockingIOError:
             # バッファが空になったら抜ける
             break

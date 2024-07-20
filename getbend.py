@@ -39,8 +39,8 @@ def check_bend(Motors, Mc):
 
 Mc = MotionCapture()
 Motors = MyDynamixel()
-# Motors.manual_move()
-# Motors.back_to_initial_position()
+Motors.manual_move()
+Motors.back_to_initial_position()
 
 check_bend(Motors, Mc)
 filename = 'nosensor_motor'
