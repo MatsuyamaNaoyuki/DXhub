@@ -8,11 +8,12 @@ from datetime import datetime
 class BendingSensor:
     def __init__(self):
         self.arduino = serial.Serial('COM3', 115200, timeout=1)
+        self.datanum = 3
         self.datas = []
 
     def get_value(self):
         rowvalue = "a"
-        while rowvalue.count("/") != 7:
+        while rowvalue.count("/") != self.datanum:
             self.arduino.reset_input_buffer()  # 入力バッファをクリア
             self.arduino.reset_output_buffer()  # 出力バッファをクリア
             while self.arduino.in_waiting < 0:
