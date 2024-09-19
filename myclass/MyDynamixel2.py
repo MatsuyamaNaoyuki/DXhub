@@ -36,11 +36,14 @@ class MyDynamixel():
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
         for id in self.IDs:
             nowforce = self.get_present_PWM(id)
+            if nowforce == 0.0:
+                dx2.DX2_ClosePort(self.dev)
+                self.dev = dx2.DX2_OpenPort(setting.COMPort, setting.Baudrate)
             while nowforce.value < 1:
                 self.move(id, 1)
                 time.sleep(1)
                 nowforce = self.get_present_PWM(id)
-                print(nowforce.value)
+                print(id, nowforce.value)
             self.move(id, -1)
         self.start_angles = (ctypes.c_double * len(self.IDs))()
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))

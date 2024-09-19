@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import numpy as np
-
+from scipy.spatial import distance_matrix
+import random
 
 # def make_3D_graph(path, firstrow = 1, lastrow = 5):
 #     df = pd.read_csv(path)
@@ -40,39 +41,71 @@ import numpy as np
 
 #     plt.show()
 
-def make_3D_graphs(coordinate, firstrow = 1, lastrow = 5):
+def make_3D_graphs(coordinate, labelname = [],  lineswitch= False):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     # カラーマップを使って色を設定
-    colors = plt.cm.jet(np.linspace(0, 1, lastrow-firstrow))
-
-
-    coordinate = coordinate[1:5]
-    
+    # colors = plt.cm.jet(np.linspace(0, 1, coordinate.shape[0]))
+    colors = ["r", "b", "g", "c", "m", "y", "k", "w"]
     # 各行のデータをプロット
-    i = 0
-    for coor in coordinate:
-        for j in range(6):
-            x = coor[j][0]
-            y = coor[j][1]
-            z = coor[j][2]
-            ax.scatter(x, y, z, c=colors[i], marker='o', label=f'Row {i+1}')
-        i = i+1
+    
+    if labelname == []:
+        for i in range(coordinate.shape[0]):
+            labelname.append("label" + str(i+1))
+    
+    
+    if lineswitch == True:
+        i = 0
+        for coor in coordinate:
+            # dist_matrix = distance_matrix(coor, coor)
+            # np.fill_diagonal(dist_matrix, np.inf)
+            # dist_matrix[np.tril_indices_from(dist_matrix)] = np.inf
+            # # min_indices = np.unravel_index(np.argmin(dist_matrix), dist_matrix.shape)
+            # min_indices = np.argmin(dist_matrix[:-1], axis=1)
+            # print(dist_matrix)
+            # print(min_indices)
+
+            for j in range(6):
+                x = coor[j][0]
+                y = coor[j][1]
+                z = coor[j][2]
+                if j == 5:
+                    ax.scatter(x, y, z, c=colors[i % 8], marker='o', label = labelname[i])
+                else:
+                    ax.scatter(x, y, z, c=colors[i % 8], marker='o')
+            for j in range(1,5): 
+                ax.plot([coor[j][0], coor[j+1][0]],
+                        [coor[j][1], coor[j+1][1]],
+                        [coor[j][2], coor[j+1][2]], c=colors[i % 8])
+
+            i = i +1
+    else:
+        i = 0
+        for coor in coordinate:
+            for j in range(6):
+                x = coor[j][0]
+                y = coor[j][1]
+                z = coor[j][2]
+                if j == 5:
+                    ax.scatter(x, y, z, c=colors[i % 8], marker='o', label = labelname[i])
+                else:
+                    ax.scatter(x, y, z, c=colors[i % 8], marker='o')
+            i = i+1
             
+    maxcoors = np.nanmax(coordinate, axis=0)
+    maxcoors = np.nanmax(maxcoors, axis=0)
+    mincoors = np.nanmin(coordinate, axis=0)
+    mincoors = np.nanmin(mincoors, axis=0)  
+    difference = maxcoors - mincoors
+    maxdifference = np.max(difference)
+    center = difference / 2 + mincoors
 
 
-    # for i, row in enumerate(rows.iterrows()):
-    #     first_row = row[1]
-    #     x = first_row[::3]
-    #     y = first_row[1::3]
-    #     z = first_row[2::3]
-    #     ax.scatter(x, y, z, c=colors[i], marker='o', label=f'Row {i+1}')
-
-    ax.set_xlim(0,250)
-    ax.set_ylim(0,250)
-    ax.set_zlim(0,250)
-
+    ax.set_xlim(center[0] -maxdifference / 2,center[0] + maxdifference / 2)
+    ax.set_ylim(center[1] -maxdifference / 2,center[1] + maxdifference / 2)
+    ax.set_zlim(center[2] -maxdifference / 2,center[2] + maxdifference / 2)    
+    
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
@@ -139,5 +172,10 @@ def get_avereage(coordinate):
     final_average = np.mean(min_list, axis=0)
     final_average = np.mean(final_average, axis=0)
     return final_average
-    print(final_average)
 
+def merge_list(a, b):
+    a = np.array(a)
+    b = np.array(b)
+
+    c = np.concatenate((a,b), axis = 1)
+    return c
