@@ -5,12 +5,13 @@ import numpy as np
 from datetime import datetime
 
 
-class BendingSensor:
+class MagneticSensor:
     def __init__(self):
         self.arduino = serial.Serial('COM3', 115200, timeout=1)
         self.datanum = 3
         self.datas = []
 
+    #Arduinoから値を受け取って返り値で返す
     def get_value(self):
         rowvalue = "a"
         while rowvalue.count("/") != self.datanum - 1:
@@ -21,38 +22,15 @@ class BendingSensor:
             rowvalue = self.arduino.readline().decode('utf-8', errors='ignore').rstrip()
         return rowvalue
         
-    
-    def change_data(self, rowvalue, change_resistace = False):
-        resistance_value = np.empty(8)
+    def change_data(self, rowvalue):
+        resistance_value = np.empty(self.datanum)
         split_value = np.array(rowvalue.split('/'))
         float_value = np.asarray(split_value, dtype=float)
-
-
-        Vcc = 5.0
-        Rt = 300000
-        for i in range(len(float_value)):
-            Vx = float_value[i] * Vcc / 1024
-            resistance_value[i] = Rt / (Vcc - Vx) * Vx
-            
-        if change_resistace == True:
-            return resistance_value
-        else:
-            return float_value
-        
+        return float_value
+    
+    #クラス内にためる
     def store_data(self, data):
         self.datas.append(data.tolist())
 
         
 
-
-
-
-
-# bending1 = BendingSensor()
-# value = bending1.get_value()
-# floatvalue = bending1.change_data(value)
-# bending1.store_data(floatvalue)
-# value = bending1.get_value()
-# floatvalue = bending1.change_data(value)
-# bending1.store_data(floatvalue)
-# print(bending1.datas)
