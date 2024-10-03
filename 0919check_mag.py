@@ -22,11 +22,12 @@ while key != 'q':   # 'q'が押されると終了
     if kb.kbhit():
         key = kb.getch()
     sensor_value = Mags.get_value()
+    now_time  = datetime.datetime.now()
     i = i + 1
     if i % 10 == 0:
         print(sensor_value)
     floatdata = Mags.change_data(sensor_value)
-    Mags.store_data(floatdata)
+    Mags.store_data(floatdata, now_time)
 
 
 

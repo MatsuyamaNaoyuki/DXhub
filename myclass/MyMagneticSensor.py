@@ -29,8 +29,14 @@ class MagneticSensor:
         return float_value
     
     #クラス内にためる
-    def store_data(self, data):
-        self.datas.append(data.tolist())
+    def store_data(self, data, nowtime = False):
+        if nowtime == False:
+            self.datas.append(data.tolist())
+        else:
+            data = data.tolist()
+            data.insert(0, nowtime)
+            self.datas.append(data)
+
 
         
 
