@@ -1,19 +1,17 @@
-import sys,os, time, datetime
-sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
-import ctypes
-from package import kbhit
-from package import dx2lib as dx2
-from package import setting
-import csv
-import pprint
-from myclass.MyDynamixel2 import MyDynamixel
-from myclass.MotionCapture2 import MotionCapture
-from myclass.MyBendingSensor import BendingSensor
-from myclass import myfunction
-import numpy as np
+from datetime import datetime
 
-BC = BendingSensor()
+# 2つの時刻をdatetimeオブジェクトに変換
+time_str1 = "2024-10-03 14:40:33.505496"
+time_str2 = "2024-10-03 14:30:33.505496"
 
-for i in range(10):
-    data = BC.get_value()
-    print(data)
+time_obj1 = datetime.strptime(time_str1, "%Y-%m-%d %H:%M:%S.%f")
+time_obj2 = datetime.strptime(time_str2, "%Y-%m-%d %H:%M:%S.%f")
+
+# 時刻の差を計算（timedeltaオブジェクト）
+time_difference = time_obj1 - time_obj1
+
+# timedeltaをミリ秒に変換
+milliseconds_difference = time_difference.total_seconds() * 1000
+
+# 結果の出力
+print(f"時刻の差: {milliseconds_difference} ミリ秒")
