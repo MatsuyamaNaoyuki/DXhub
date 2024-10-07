@@ -1,3 +1,2 @@
 
-
-# CSVファイルのパスを指定
+        for anglenum in range(4):
