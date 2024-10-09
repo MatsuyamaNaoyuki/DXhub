@@ -41,7 +41,7 @@ class MyDynamixel():
                 self.dev = dx2.DX2_OpenPort(setting.COMPort, setting.Baudrate)
             while nowforce.value < 1:
                 self.move(id, 1)
-                time.sleep(1)
+                time.sleep(0.1)
                 nowforce = self.get_present_PWM(id)
                 print(id, nowforce.value)
             self.move(id, -1)
@@ -111,7 +111,8 @@ class MyDynamixel():
         dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
-
+    def move_to_point(id, angle_value):
+        
 
 
     def manual_move(self, record = False):
@@ -137,6 +138,22 @@ class MyDynamixel():
                     self.move(3, -10)
                 if key =='f':  
                     self.move(4, -10)
+                if key =='t':  
+                    self.move(1, 100)
+                if key =='y':  
+                    self.move(2, 100)
+                if key =='u':  
+                    self.move(3, 100)
+                if key =='i':  
+                    self.move(4, 100)
+                if key =='g':  
+                    self.move(1, -100)
+                if key =='h':  
+                    self.move(2, -100)
+                if key =='j':  
+                    self.move(3, -100)
+                if key =='k':  
+                    self.move(4, -100)
                 if record == True:
                     self.record_angle()
                 print(self.get_present_angles())

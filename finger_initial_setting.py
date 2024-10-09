@@ -7,10 +7,9 @@ from package import setting
 import csv
 import pprint
 from myclass.MyDynamixel2 import MyDynamixel
-from myclass.MotionCapture2 import MotionCapture
+# from myclass.MotionCapture2 import MotionCapture
 from myclass import myfunction
 
-Mc = MotionCapture()
 Motors = MyDynamixel()
 
 Motors.manual_move()

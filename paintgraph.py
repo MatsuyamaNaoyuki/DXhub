@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import time
 
 # CSVファイルのパスを指定
-csv_file_path = 'MagChack20241003_195618.csv'
+csv_file_path = 'MoldStar2kaime.csv'
 
 # CSVファイルを読み込む
 df = pd.read_csv(csv_file_path, header=None)
@@ -39,18 +39,34 @@ y_values_1 = df[1]  # 1列目
 y_values_2 = df[2]  # 2列目
 y_values_3 = df[3]  # 3列目
 
+y_values_4 = df[4]  # 1列目
+y_values_5 = df[5]  # 2列目
+y_values_6 = df[6]  # 3列目
+
+y_values_7 = df[7]  # 1列目
+y_values_8 = df[8]  # 2列目
+y_values_9 = df[9]  # 3列目
+
 # グラフを作成
 plt.figure(figsize=(10, 6))
 
 # 各列をプロット
-plt.plot(x_values, y_values_1, label='left values')
-plt.plot(x_values, y_values_2, label='sentor values')
-plt.plot(x_values, y_values_3, label='right values')
+plt.plot(x_values, y_values_1, label='top left values')
+plt.plot(x_values, y_values_2, label='top sentor values')
+plt.plot(x_values, y_values_3, label='top right values')
+plt.plot(x_values, y_values_4, label='sentor left values')
+plt.plot(x_values, y_values_5, label='sentor sentor values')
+plt.plot(x_values, y_values_6, label='sentor right values')
+# plt.plot(x_values, y_values_7, label='root left values')
+# plt.plot(x_values, y_values_8, label='root sentor values')
+# plt.plot(x_values, y_values_9, label='root right values')
 
 # グラフのタイトル、ラベル、凡例を設定
 plt.title('big sand2')
 plt.xlabel('milisecond')
 plt.ylabel('sensor Value')
+
+plt.ylim(580,700)
 
 
 # 凡例を表示

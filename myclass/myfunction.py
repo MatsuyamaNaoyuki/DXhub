@@ -179,3 +179,23 @@ def merge_list(a, b):
 
     c = np.concatenate((a,b), axis = 1)
     return c
+
+def combine_lists(*lists):
+    combined_list = []
+    for lst in lists:
+        combined_list.extend(lst)
+    return combined_list
+
+
+def get_all_data(Motors, Motion, Magsensor):
+    now_time  = datetime.datetime.now()
+    motor_angle = Motors.get_present_angles()
+    motor_PWM = Motors.get_present_PWMs()
+    Motion_data = Motion.get_data(timereturn = False)
+    mag_data = Magsensor.get_value()
+    formatted_now = now_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+    mag_data = Magsensor.change_data(mag_data)
+    Motion_data = Motion.change_data(Motion_data)
+    all_data = combine_lists(motor_angle, motor_PWM, mag_data, Motion_data)
+    all_data.insert(0, formatted_now)
+    return all_data
