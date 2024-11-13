@@ -33,7 +33,7 @@ class MotionCapture():
         self.sock.setblocking(True)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         now_time  = datetime.datetime.now()
-        # print("X")
+        print("X")
         data, addr = self.sock.recvfrom(1024)
         formatted_now = now_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
         # print(data)
@@ -80,11 +80,11 @@ def clear_udp_buffer(sock, timeout=1):
             break
         
         
-# mc = MotionCapture()
+mc = MotionCapture()
 
-# while(True):
-#     data,nowtime = mc.get_data()
-#     mc.store_data(data, nowtime)
+while(True):
+    data,nowtime = mc.get_data()
+    mc.store_data(data, nowtime)
 # data,nowtime = mc.get_data()
 # mc.store_data(data, nowtime)
 # print(mc.datas)

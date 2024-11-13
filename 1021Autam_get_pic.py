@@ -58,21 +58,16 @@ def check_bend(Motors, Mc, Mag):
 Mc = MotionCapture()
 Motors = MyDynamixel()
 Mag = MagneticSensor()
-Motors.back_to_initial_position()
-data = check_bend(Motors, Mc, Mag)
-# data = myfunction.get_all_data(Motors, Mc, Mag)
+Motors.manual_move()
+data = myfunction.get_all_data(Motors, Mc, Mag)
+
+
 print(data)
 
-filename = 'Alldata_mold15'
+filename = 'pictureyou'
 now = datetime.datetime.now()
 filename = os.path.dirname(__file__) +"\\" + filename + now.strftime('%Y%m%d_%H%M%S') + '.csv'
 
 with open(filename, 'w',newline="") as f:
     writer = csv.writer(f)
     writer.writerows(data)
-
-
-  
-
-
-    

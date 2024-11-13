@@ -4,13 +4,13 @@ from datetime import datetime, timedelta, timezone
 import time
 
 # CSVファイルのパスを指定
-csv_file_path = 'Autaum_mid_data_small_double20241017_214008.csv'
+csv_file_path = 'Autaum_mid_data_harubaha_farsand20241110_194334.csv'
 
 # CSVファイルを読み込む
 df = pd.read_csv(csv_file_path, header=None)
 
 
-# df = df.drop(254)
+df = df.drop(254)
 
 # df = df.drop(196)
 # df = df.drop(0)
@@ -31,18 +31,15 @@ for i in range(len(df)):
     seconds = tmptime - first_time
     milliseconds = seconds.total_seconds()
     df.loc[i, 0] = milliseconds
-    # df.loc[i, 5] = df.loc[i, 5] - 466
-    # df.loc[i, 6] = df.loc[i, 6] - 546.0
-    # df.loc[i, 7] = df.loc[i, 7] - 465.0
-    # df.loc[i, 9] = df.loc[i, 9] * 5 / 1024
-    # df.loc[i, 10] = df.loc[i, 10] * 5 / 1024
-    # df.loc[i, 11] = df.loc[i, 11] * 5 / 1024
-    # df.loc[i, 12] = df.loc[i, 12] * 5 / 1024
-    # df.loc[i, 13] = df.loc[i, 13] * 5 / 1024
-    # df.loc[i, 14] = df.loc[i, 14] * 5 / 1024
-    # df.loc[i, 15] = df.loc[i, 15] * 5 / 1024
-    # df.loc[i, 16] = df.loc[i, 16] * 5 / 1024
-    # df.loc[i, 17] = df.loc[i, 17] * 5 / 1024
+    448.0,563.0,477.0
+    df.loc[i, 5] = df.loc[i, 5] - 448
+    df.loc[i, 6] = df.loc[i, 6] - 563.0
+    df.loc[i, 7] = df.loc[i, 7] - 477.0
+    df.loc[i, 5] = df.loc[i, 5] * 5 / 1024
+    df.loc[i, 6] = df.loc[i, 6] * 5 / 1024
+    df.loc[i, 7] = df.loc[i, 7] * 5 / 1024
+
+
     
 
 
@@ -63,9 +60,9 @@ print(df)
 # 複数の列をプロット（例として1列目、2列目、3列目をプロット）
 x_values = df[0]  # 横軸はデータ数（インデックス）
 # x_values = range(len(df)) 
-y_values_1 = df[5]  # 1列目
+y_values_1 = df[7]  # 1列目
 y_values_2 = df[6]  # 2列目
-y_values_3 = df[7]  # 3列目
+y_values_3 = df[5]  # 3列目
 
 # y_values_4 = df[12]  # 1列目
 # y_values_5 = df[13]  # 2列目
@@ -90,11 +87,11 @@ plt.plot(x_values, y_values_3, label='left sensor values')
 # plt.plot(x_values, y_values_9, label='root right values')
 
 # グラフのタイトル、ラベル、凡例を設定
-plt.title('root sensor Value', fontsize=24)
+plt.title('big magnet and both-side', fontsize=24)
 plt.xlabel('second', fontsize=24)
 plt.ylabel('sensor Value', fontsize=24)
 
-plt.ylim(539,881)
+plt.ylim(-100 * 5 / 1024,202 * 5 / 1024)
 
 
 plt.tick_params(labelsize=18)

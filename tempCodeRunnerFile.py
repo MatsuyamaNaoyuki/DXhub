@@ -1,2 +1,2 @@
 
-        for anglenum in range(4):
+# 凡例を表示

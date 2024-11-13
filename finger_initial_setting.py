@@ -22,6 +22,6 @@ Motors.manual_move()
 
 # with open(filename, 'w',newline="") as f:
 #     writer = csv.writer(f)
-#     writer.writerows(Mc.datas)
+#     writer.writerows(Mc.datas)tt
 
 

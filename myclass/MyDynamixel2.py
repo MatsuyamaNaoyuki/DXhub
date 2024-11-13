@@ -47,11 +47,15 @@ class MyDynamixel():
             self.move(id, -1)
         self.start_angles = (ctypes.c_double * len(self.IDs))()
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))
-
-
             
         #力がかかるまでmovep
         #少し緩める
+        
+        
+    def set_start_angle(self):
+        self.start_angles = (ctypes.c_double * len(self.IDs))()
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs))
+        
 
     def get_present_PWM(self, id):
         nowforce = (ctypes.c_double)()
@@ -98,6 +102,7 @@ class MyDynamixel():
 
     def move(self, id, angle_displacement):
         idi = id - 1
+        #現在の角度（内部）を取得
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
         gole_angles = self.rotation_angles
 
@@ -108,11 +113,23 @@ class MyDynamixel():
             setangle = angle_displacement
 
         gole_angles[idi] = gole_angles[idi] + setangle
+        #実際に移動（内部角度を入力）
         dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
-    def move_to_point(id, angle_value):
-        
+    def move_to_point(self, id, angle_value):
+        idi = id - 1
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
+        gole_angles = self.rotation_angles
+
+        #方向の調整
+        if id ==  1 or id == 4:
+            setangle = angle_value * -1
+        else:
+            setangle = angle_value
+        gole_angles[idi] = self.start_angles[idi] + setangle
+        dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
 
     def manual_move(self, record = False):
