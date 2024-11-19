@@ -9,6 +9,8 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import distance_matrix
 import random
+import torch
+
 
 # def make_3D_graph(path, firstrow = 1, lastrow = 5):
 #     df = pd.read_csv(path)
@@ -190,12 +192,32 @@ def combine_lists(*lists):
 def get_all_data(Motors, Motion, Magsensor):
     now_time  = datetime.datetime.now()
     motor_angle = Motors.get_present_angles()
-    motor_PWM = Motors.get_present_PWMs()
+    motor_current = Motors.get_present_currents()
     Motion_data = Motion.get_data(timereturn = False)
     mag_data = Magsensor.get_value()
     formatted_now = now_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     mag_data = Magsensor.change_data(mag_data)
     Motion_data = Motion.change_data(Motion_data)
-    all_data = combine_lists(motor_angle, motor_PWM, mag_data, Motion_data)
+    all_data = combine_lists(motor_angle, motor_current, mag_data, Motion_data)
     all_data.insert(0, formatted_now)
     return all_data
+
+
+
+def read_csv_to_torch(filename):
+    csv_file_path = "dami-.csv"
+    df = pd.read_csv(csv_file_path)
+
+    #説明変数と目的変数に聞知
+    x_value = df.iloc[:, 1:18]
+    y_value = df.iloc[:, 18:23]
+
+
+    # データを NumPy 配列に変換してから PyTorch テンソルに変換
+    np_x_value= x_value.values  # NumPy 配列に変換
+    np_y_value= y_value.values
+
+    tensor_data_x = torch.tensor(np_x_value, dtype=torch.float32)
+    tensor_data_y = torch.tensor(np_y_value, dtype=torch.float32)
+    
+    return(tensor_data_x,tensor_data_y)

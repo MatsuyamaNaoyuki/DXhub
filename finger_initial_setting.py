@@ -1,3 +1,5 @@
+#マニュアルムーブするだけ
+
 import sys,os, time, datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
 import ctypes
@@ -12,6 +14,8 @@ from myclass import myfunction
 
 Motors = MyDynamixel()
 
+
+Motors.back_to_initial_position()
 Motors.manual_move()
 
 

@@ -1,3 +1,6 @@
+#とってきた点群を三次元に表示するやつ（たぶん使わない）
+
+
 import sys,os, time, datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
 import ctypes

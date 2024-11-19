@@ -35,14 +35,14 @@ class MyDynamixel():
         time.sleep(1)
         dx2.DXL_SetTorqueEnablesEquival(self.dev, self.IDs, len(self.IDs), True)
         for id in self.IDs:
-            nowforce = self.get_present_PWM(id)
+            nowforce = self.get_present_current(id)
             if nowforce == 0.0:
                 dx2.DX2_ClosePort(self.dev)
                 self.dev = dx2.DX2_OpenPort(setting.COMPort, setting.Baudrate)
             while nowforce.value < 1:
                 self.move(id, 1)
                 time.sleep(0.1)
-                nowforce = self.get_present_PWM(id)
+                nowforce = self.get_present_current(id)
                 print(id, nowforce.value)
             self.move(id, -1)
         self.start_angles = (ctypes.c_double * len(self.IDs))()
@@ -69,6 +69,24 @@ class MyDynamixel():
         nowforces = []
         for id in self.IDs:
             dx2.DXL_GetPresentPWM(self.dev, id,  nowforce)
+            if id == 1 or id == 4:
+                nowforce.value = nowforce.value * -1
+            nowforces.append(nowforce.value)
+        return nowforces
+    
+    
+    def get_present_current(self, id):
+        nowforce = (ctypes.c_double)()
+        dx2.DXL_GetPresentCurrent(self.dev, id,  nowforce)
+        if id == 1 or id == 4:
+            nowforce.value = nowforce.value * -1
+        return nowforce
+
+    def get_present_currents(self):
+        nowforce = (ctypes.c_double)()
+        nowforces = []
+        for id in self.IDs:
+            dx2.DXL_GetPresentCurrent(self.dev, id,  nowforce)
             if id == 1 or id == 4:
                 nowforce.value = nowforce.value * -1
             nowforces.append(nowforce.value)

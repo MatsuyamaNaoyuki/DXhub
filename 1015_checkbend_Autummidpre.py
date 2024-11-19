@@ -1,4 +1,4 @@
-#MagSensorを用いた学習のデータセット作成のプログラム（予定）
+#一部分のフィンガーに対して値を取得する用
 import sys,os, time, datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
 import ctypes

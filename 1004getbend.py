@@ -1,4 +1,5 @@
-#MagSensorを用いた学習のデータセット作成のプログラム（予定）
+#フィンガーの前後左右への動きの後，Mc，センサー，モーターのすべての値を取得
+#フィンガーに対する磁石の動作確認用
 import sys,os, time, datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
 import ctypes

@@ -1,3 +1,6 @@
+#磁石の値を動かすだけ，動作は外力
+
+
 import sys,os, time, datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), 'myclass'))
 import ctypes
