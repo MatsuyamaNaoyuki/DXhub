@@ -1,9 +1,11 @@
+import time
 #resnetを実装したもの
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision.models import resnet18
 from myclass import myfunction
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class ResNetRegression(nn.Module):
     def __init__(self, input_dim, output_dim):
@@ -30,18 +32,23 @@ class ResNetRegression(nn.Module):
 input_dim = 17
 output_dim = 5
 learning_rate = 0.001
-
 num_epochs = 100
 
 # モデルの初期化
 model = ResNetRegression(input_dim=input_dim, output_dim=output_dim)
+if torch.cuda.is_available():
+    model.cuda()
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 filename = "dami-.csv"
 x_data,y_data = myfunction.read_csv_to_torch(filename)
+x_data = x_data.to(device)
+y_data = y_data.to(device)
 x_data = (x_data - x_data.mean()) / x_data.std()
 y_data = (y_data - y_data.mean()) / y_data.std()
+
+
 
 
 train_size = int(0.8 * len(x_data))
@@ -52,6 +59,11 @@ x_train_data = x_data[:train_size]
 y_train_data = y_data[:train_size]
 x_test_data = x_data[train_size:]
 y_test_data = y_data[train_size:]
+
+
+print(x_train_data.get_device())
+start = time.time()  # 現在時刻（処理開始前）を取得
+
 
 
 # 学習ループ
@@ -72,3 +84,9 @@ with torch.no_grad():
     y_test_pred = model(x_test_data)
     test_loss = criterion(y_test_pred, y_test_data)
     print(f'Test Loss: {test_loss.item():.4f}')
+
+    
+end = time.time()  # 現在時刻（処理完了後）を取得
+
+time_diff = end - start  # 処理完了後の時刻から処理開始前の時刻を減算する
+print(time_diff)  # 処理にかかった時間データを使用
