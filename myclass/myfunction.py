@@ -205,7 +205,7 @@ def get_all_data(Motors, Motion, Magsensor):
 
 
 def read_csv_to_torch(filename):
-    csv_file_path = "dami-.csv"
+    csv_file_path = filename
     df = pd.read_csv(csv_file_path)
 
     #説明変数と目的変数に聞知
@@ -214,10 +214,29 @@ def read_csv_to_torch(filename):
 
 
     # データを NumPy 配列に変換してから PyTorch テンソルに変換
-    np_x_value= x_value.values  # NumPy 配列に変換
-    np_y_value= y_value.values
+    # np_x_value= x_value.values  # NumPy 配列に変換
+    # np_y_value= y_value.values
+
+    np_x_value= x_value.to_numpy().astype("float32")  # NumPy 配列に変換
+    np_y_value= y_value.to_numpy().astype("float32")
 
     tensor_data_x = torch.tensor(np_x_value, dtype=torch.float32)
     tensor_data_y = torch.tensor(np_y_value, dtype=torch.float32)
     
     return(tensor_data_x,tensor_data_y)
+
+
+
+def save_model(model, filename):
+    now = datetime.datetime.now()
+    current_path = os.path.realpath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.join(current_dir, ".")
+    parent_dir = os.path.realpath(parent_dir)
+
+
+    filename = os.path.dirname(parent_dir) +"\\" + filename + now.strftime('%Y%m%d_%H%M%S') + '.pth'
+    model_scripted = torch.jit.script(model)
+    model_scripted.save(filename)
+
+

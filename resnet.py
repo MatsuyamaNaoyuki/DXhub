@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision.models import resnet18
+from torch.utils.data import DataLoader
 from myclass import myfunction
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -50,7 +51,6 @@ y_data = (y_data - y_data.mean()) / y_data.std()
 
 
 
-
 train_size = int(0.8 * len(x_data))
 test_size = len(x_data) - train_size
 
@@ -61,7 +61,7 @@ x_test_data = x_data[train_size:]
 y_test_data = y_data[train_size:]
 
 
-print(x_train_data.get_device())
+
 start = time.time()  # 現在時刻（処理開始前）を取得
 
 
@@ -76,7 +76,13 @@ for epoch in range(num_epochs):
     optimizer.step()
 
     if (epoch + 1) % 10 == 0:
-        print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
+        print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}', end='  ')
+        model.eval()
+        with torch.no_grad():
+            y_test_pred = model(x_test_data)
+            test_loss = criterion(y_test_pred, y_test_data)
+            print(f'Test Loss: {test_loss.item():.4f}')
+
 
 # テスト
 model.eval()
@@ -87,6 +93,5 @@ with torch.no_grad():
 
     
 end = time.time()  # 現在時刻（処理完了後）を取得
-
 time_diff = end - start  # 処理完了後の時刻から処理開始前の時刻を減算する
 print(time_diff)  # 処理にかかった時間データを使用
