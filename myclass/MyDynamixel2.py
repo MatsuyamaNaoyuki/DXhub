@@ -93,17 +93,6 @@ class MyDynamixel():
         return nowforces
     
     def get_present_angles(self): #スタートとの角度の差を計算
-        # self.start_angles = (ctypes.c_double * len(self.IDs))()
-        # dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs)) 
-        # print('(', end='')
-        # print(('{:7.1f},'*len(self.start_angles)).format(*self.start_angles), end=')\n')  
-        # self.move(1, -10)
-        # self.move(2, -10)
-        # self.move(3, -10)
-        # self.move(4, -10)    
-        # dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.start_angles, len(self.IDs)) 
-        # print('(', end='')
-        # print(('{:7.1f},'*len(self.start_angles)).format(*self.start_angles), end=')\n')  
         now_angles = (ctypes.c_double * len(self.IDs))()
         now_angles_list = []
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, now_angles, len(self.IDs))
@@ -116,7 +105,15 @@ class MyDynamixel():
             now_angles_list.append(angle)
         return now_angles_list
         
+    def fastget_present_angles(self): #スタートとの角度の差を計算
+        now_angles = (ctypes.c_double * len(self.IDs))()
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, now_angles, len(self.IDs))
+        return now_angles
 
+    def fastget_present_currents(self):
+        nowforce =  (ctypes.c_double * len(self.IDs))()
+        dx2.DXL_GetPresentCurrents(self.dev, self.IDs, nowforce, len(self.IDs))
+        return nowforce
 
     def move(self, id, angle_displacement):
         idi = id - 1
@@ -149,7 +146,22 @@ class MyDynamixel():
         dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
         dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
 
+    def move_goal_angles(self, anglevalues):
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
+        gole_angles = self.rotation_angles
+        anglevalues[0] = anglevalues[0] * -1
+        anglevalues[3] = anglevalues[3] * -1
+        
+        for i in range(len(anglevalues)):
+            gole_angles[i] = self.start_angles[i] + anglevalues[i]
+        
+        dx2.DXL_SetGoalAngles (self.dev, self.IDs,  gole_angles, len(self.IDs))
+        dx2.DXL_GetPresentAngles(self.dev, self.IDs, self.rotation_angles, len(self.IDs))
+        
 
+        
+    
+    
     def manual_move(self, record = False):
         key = ''
         kb = kbhit.KBHit()

@@ -1,6 +1,8 @@
 import random
-
+from myclass.MyDynamixel2 import MyDynamixel
 import numpy as np
+import datetime
+from myclass import myfunction
 
 def cos_sim(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
@@ -38,7 +40,7 @@ def dlrandom():
 def lrandom():
     datas = []
     motor_max = 300
-    trial_num = 10
+    trial_num = 1000
     i = 0
     start_angle = np.array([0,0,0,0])
     goal_angle = np.random.rand(4) * motor_max
@@ -86,7 +88,7 @@ def complement_between(a,b):
 def lrandom():
     datas = []
     motor_max = 300
-    trial_num = 10
+    trial_num = 100
     i = 0
     start_angle = np.array([0,0,0,0])
     goal_angle = np.random.rand(4) * motor_max
@@ -156,7 +158,45 @@ def lfix_bet_randam():
  
 
 
-data = lfix_bet_randam()
+def complement_between_with_maxchange(a, b, max_change):
+    angle = a         # 現在の角度を a に設定
+    angle_list = [a]
+    try:
+        pm = (b - a) / abs(b - a)  # 進行方向を決定 (+1 または -1)
+    except ZeroDivisionError:
+        return angle_list
+    else:
+        while pm * angle < pm * b:
+            change = random.uniform(0, max_change)  # 変化量を 0～max_change の間でランダムに設定
+            angle += change * pm                   # 現在の角度を更新
+            angle_list.append(angle)
 
-print(data)
 
+        if angle_list[-1] != b:
+            angle_list.append(b)  # 最後に終了値 b を確実に追加
+        return angle_list
+
+def move_target_at_random(start_angles, goal):
+    changesteps = []
+    for i in range(len(goal)):
+        changesteps.append(complement_between_with_maxchange(start_angles[i], goal[i], 5))
+    max_length = max(len(row) for row in changesteps)
+    padded_array = np.array([row + [0] * (max_length - len(row)) for row in changesteps])
+    transposed_list = [[padded_array[row][col] for row in range(len(padded_array))]
+                   for col in range(max_length)]
+    return transposed_list
+
+
+def randam_heimen():
+    data = []
+    for i in range(10):
+        data.extend(move_target_at_random([0,0,0,0], [0,0,250,0]))
+        data.extend(move_target_at_random([0,0,250,0], [0,0,0,0]))
+    return data
+
+
+motor_angle = randam_heimen()
+print(motor_angle)
+
+filename = 'hawtomove'
+myfunction.wirte_pkl(motor_angle, filename)

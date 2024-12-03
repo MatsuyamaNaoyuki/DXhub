@@ -80,11 +80,11 @@ def clear_udp_buffer(sock, timeout=1):
             break
         
         
-mc = MotionCapture()
+# mc = MotionCapture()
 
-while(True):
-    data,nowtime = mc.get_data()
-    mc.store_data(data, nowtime)
+# while(True):
+#     data,nowtime = mc.get_data()
+#     mc.store_data(data, nowtime)
 # data,nowtime = mc.get_data()
 # mc.store_data(data, nowtime)
 # print(mc.datas)

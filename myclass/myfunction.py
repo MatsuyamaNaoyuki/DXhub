@@ -10,6 +10,7 @@ import numpy as np
 from scipy.spatial import distance_matrix
 import random
 import torch
+import pickle
 
 
 # def make_3D_graph(path, firstrow = 1, lastrow = 5):
@@ -208,7 +209,7 @@ def read_csv_to_torch(filename):
     csv_file_path = filename
     df = pd.read_csv(csv_file_path)
 
-    #説明変数と目的変数に聞知
+    #説明変数と目的変数に分離
     x_value = df.iloc[:, 1:18]
     y_value = df.iloc[:, 18:23]
 
@@ -233,10 +234,29 @@ def save_model(model, filename):
     current_dir = os.path.dirname(current_path)
     parent_dir = os.path.join(current_dir, ".")
     parent_dir = os.path.realpath(parent_dir)
-
-
     filename = os.path.dirname(parent_dir) +"\\" + filename + now.strftime('%Y%m%d_%H%M%S') + '.pth'
     model_scripted = torch.jit.script(model)
     model_scripted.save(filename)
 
+def wirte_csv(data, filename):
+    now = datetime.datetime.now()
+    current_path = os.path.realpath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.join(current_dir, ".")
+    parent_dir = os.path.realpath(parent_dir)
+    filename = os.path.dirname(parent_dir) +"\\" + filename + now.strftime('%Y%m%d_%H%M%S') + '.csv'
+    with open(filename, 'w',newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(data)
 
+def wirte_pkl(data, filename):
+    now = datetime.datetime.now()
+    current_path = os.path.realpath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.join(current_dir, ".")
+    parent_dir = os.path.realpath(parent_dir)
+    filename = os.path.dirname(parent_dir) +"\\" + filename + now.strftime('%Y%m%d_%H%M%S') + '.pickle'
+
+    with open(filename, 'wb') as fo:
+        pickle.dump(data, fo)
+    

@@ -13,10 +13,11 @@ from myclass.MyDynamixel2 import MyDynamixel
 from myclass import myfunction
 
 Motors = MyDynamixel()
+Motors.manual_move()
 
 
 Motors.back_to_initial_position()
-Motors.manual_move()
+
 
 
 
