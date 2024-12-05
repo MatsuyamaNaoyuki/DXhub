@@ -211,7 +211,7 @@ def read_csv_to_torch(filename):
 
     #説明変数と目的変数に分離
     x_value = df.iloc[:, 1:18]
-    y_value = df.iloc[:, 18:23]
+    y_value = df.iloc[:, 18:33]
 
 
     # データを NumPy 配列に変換してから PyTorch テンソルに変換

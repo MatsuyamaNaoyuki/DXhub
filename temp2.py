@@ -1,3 +1,3 @@
-
-for i in range(9,17):
-    print(i)
+for i in range(4):
+    filename = "a" + str(i)
+    print(filename)

@@ -71,9 +71,9 @@ def test(model, data_loader):
 
 # ハイパーパラメータ
 input_dim = 17
-output_dim = 5
+output_dim = 15
 learning_rate = 0.001
-num_epochs = 100
+num_epochs = 300
 
 # モデルの初期化
 model = ResNetRegression(input_dim=input_dim, output_dim=output_dim)
@@ -82,7 +82,7 @@ if torch.cuda.is_available():
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-filename = "dami-.csv"
+filename = "1204_twodimention/test20241203_172216.csv"
 x_data,y_data = myfunction.read_csv_to_torch(filename)
 x_data = x_data.to(device)
 y_data = y_data.to(device)
@@ -118,6 +118,9 @@ for epoch in range(num_epochs):
     record_test_loss.append(test_loss)
 
     if epoch%10 == 0:
+        # modelの保存を追加
+        filename = 'model_epoch' + str(epoch)+"_"
+        myfunction.save_model(model, filename)
         print(f"epoch={epoch}, train:{train_loss:.5f}, test:{test_loss:.5f}")
 
 
@@ -134,5 +137,4 @@ time_diff = end - start  # 処理完了後の時刻から処理開始前の時�
 print(time_diff)  # 処理にかかった時間データを使用
 
 
-filename = 'model'
-myfunction.save_model(model, filename)
+
