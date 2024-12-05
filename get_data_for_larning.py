@@ -74,14 +74,15 @@ def get_magsensor(Ms):
     
 
 def move(Motors):
-    with open('hawtomove20241202_205126.pickle', mode='br') as fi:
+    with open('hawtomove20241204_192404.pickle', mode='br') as fi:
         change_angle = pickle.load(fi)
     
     for len in change_angle:
         print(len)
         Motors.move_to_point(3, len[2])
+        time.sleep(0.2)
 
-
+    # time.sleep(2)
     stop_event.set()
     
     
@@ -119,6 +120,7 @@ def get_motioncapture(Ms):
             if frame :
                 try:
                     motiondata = py_data_func(frame, client)
+                    print(motiondata)
                     Motion_datas.append(motiondata)
                 finally:
                     client.PyNokovFreeFrame(frame)
